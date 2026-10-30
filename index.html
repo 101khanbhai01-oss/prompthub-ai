@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111126">
+<meta name="description" content="Discover, copy and create AI prompts for images, writing, YouTube and coding.">
+<title>PromptHub AI — Prompt Library</title>
+
+<style>
+:root {
+  --bg:#0b0b18;
+  --panel:#151529;
+  --panel2:#1c1c35;
+  --text:#f5f5ff;
+  --muted:#a5a5c2;
+  --accent:#9b87ff;
+  --accent2:#60e5d0;
+  --border:#30304d;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  line-height:1.6;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+header{
+  position:sticky;top:0;z-index:10;
+  background:#0b0b18ed;backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav{
+  max-width:1150px;margin:auto;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;flex-wrap:wrap;
+}
+.logo{font-size:21px;font-weight:850;letter-spacing:-.5px}
+.logo span{color:var(--accent)}
+.nav a{color:var(--muted);font-size:14px}
+.hero{
+  max-width:900px;margin:auto;text-align:center;
+  padding:65px 20px 38px;
+}
+.tag{
+  display:inline-block;padding:6px 13px;border-radius:30px;
+  border:1px solid var(--border);color:var(--accent2);
+  font-size:13px;margin-bottom:16px;
+}
+h1{font-size:clamp(32px,6vw,56px);line-height:1.15;margin:0 0 18px}
+.gradient{
+  background:linear-gradient(100deg,#a999ff,#61e5d0);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p{color:var(--muted);max-width:620px;margin:0 auto 24px}
+.searchbox{
+  max-width:650px;margin:auto;display:flex;gap:8px;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:15px;padding:8px;
+}
+.searchbox input{
+  min-width:0;flex:1;background:transparent;border:0;
+  outline:0;color:var(--text);padding:10px;
+}
+.btn{
+  border:0;border-radius:10px;padding:10px 16px;
+  background:var(--accent);color:#15122b;font-weight:750;
+}
+.btn:hover{filter:brightness(1.1)}
+.btn.secondary{
+  color:var(--text);background:var(--panel2);
+  border:1px solid var(--border);
+}
+main{max-width:1150px;margin:auto;padding:15px 20px 60px}
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;margin:15px 0 38px;
+}
+.stat{
+  text-align:center;background:var(--panel);
+  border:1px solid var(--border);border-radius:14px;padding:15px;
+}
+.stat strong{font-size:22px;display:block}
+.stat span{font-size:13px;color:var(--muted)}
+.section-head{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;flex-wrap:wrap;margin:36px 0 18px;
+}
+.section-head h2{margin:0;font-size:25px}
+.muted{color:var(--muted);font-size:14px}
+.categories{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+.chip{
+  border:1px solid var(--border);border-radius:30px;
+  background:var(--panel);color:var(--muted);
+  padding:9px 15px;
+}
+.chip.active,.chip:hover{
+  background:#292447;color:white;border-color:var(--accent);
+}
+.grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+.card{
+  display:flex;flex-direction:column;min-width:0;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:19px;transition:.2s;
+}
+.card:hover{border-color:#7770bc;transform:translateY(-2px)}
+.card-top{display:flex;justify-content:space-between;gap:10px}
+.card h3{font-size:17px;margin:12px 0 8px}
+.emoji{font-size:26px}
+.pill{
+  font-size:11px;color:var(--accent2);
+  border:1px solid #315a59;border-radius:20px;
+  padding:3px 8px;white-space:nowrap;height:max-content;
+}
+.prompt{
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  background:#101021;border:1px solid #292943;
+  border-radius:10px;padding:12px;font-size:13px;
+  color:#d2d2ed;max-height:145px;overflow:auto;
+  margin:8px 0 14px;flex:1;
+}
+.card-actions{display:flex;gap:8px;flex-wrap:wrap}
+.card-actions button{flex:1;font-size:13px;padding:9px 10px}
+.empty{
+  display:none;text-align:center;color:var(--muted);
+  padding:35px;background:var(--panel);border-radius:14px;
+}
+.generator{
+  margin-top:50px;background:linear-gradient(135deg,#19172f,#122a31);
+  border:1px solid var(--border);border-radius:20px;padding:25px;
+}
+.generator h2{margin-top:0}
+.form-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px;
+}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-size:14px;color:#d9d9ef}
+.field input,.field select,.field textarea{
+  width:100%;padding:12px;border-radius:10px;
+  background:#101021;color:var(--text);
+  border:1px solid var(--border);outline-color:var(--accent);
+}
+.field textarea{resize:vertical;min-height:90px}
+.full{grid-column:1/-1}
+.output{
+  display:none;margin-top:18px;background:#101021;
+  border:1px solid var(--border);padding:15px;border-radius:12px;
+}
+.output pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.7 inherit}
+.note{
+  border:1px solid var(--border);border-radius:12px;
+  padding:14px;color:var(--muted);font-size:13px;margin-top:15px;
+}
+footer{
+  text-align:center;border-top:1px solid var(--border);
+  padding:28px 20px;color:var(--muted);font-size:13px;
+}
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:#e1fff7;color:#102b28;padding:11px 18px;
+  border-radius:10px;font-weight:700;z-index:20;
+  display:none;max-width:90%;text-align:center;
+}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){
+  .nav{padding:12px 15px}
+  .nav-links{display:flex;gap:12px;flex-wrap:wrap}
+  .hero{padding:45px 16px 25px}
+  main{padding:10px 14px 40px}
+  .grid{grid-template-columns:1fr}
+  .stats{gap:7px}
+  .stat{padding:12px 5px}
+  .stat strong{font-size:19px}
+  .stat span{font-size:11px}
+  .form-grid{grid-template-columns:1fr}
+  .full{grid-column:auto}
+  .generator{padding:18px}
+  .searchbox .btn{padding:9px 12px}
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="nav">
+    <a class="logo" href="#">✨ Prompt<span>Hub</span> AI</a>
+    <div class="nav-links">
+      <a href="#library">Prompt Library</a>
+      <a href="#generator">Create Prompt</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="tag">✨ Your AI Prompt Library</div>
+  <h1>আপনার আইডিয়া থেকে<br><span class="gradient">সেরা AI Prompt</span></h1>
+  <p>
+    ছবি তৈরি, লেখালেখি, YouTube ভিডিও কিংবা কোডিং—
+    আপনার পছন্দের প্রম্পট খুঁজুন, কপি করুন এবং ব্যবহার করুন।
+  </p>
+  <div class="searchbox">
+    <input id="search" type="search"
+      placeholder="প্রম্পট খুঁজুন... যেমন ছবি, logo, YouTube"
+      aria-label="প্রম্পট খুঁজুন">
+    <button class="btn" id="searchBtn">খুঁজুন</button>
+  </div>
+</section>
+
+<main>
+  <div class="stats">
+    <div class="stat"><strong id="totalCount">12</strong><span>প্রম্পট</span></div>
+    <div class="stat"><strong>4</strong><span>ক্যাটাগরি</span></div>
+    <div class="stat"><strong>100%</strong><span>Responsive Design</span></div>
+  </div>
+
+  <section id="library">
+    <div class="section-head">
+      <h2>📚 Prompt Library</h2>
+      <span class="muted">পছন্দ করুন ও কপি করুন</span>
+    </div>
+    <div class="categories" id="categories">
+      <button class="chip active" data-category="all">🌟 সব</button>
+      <button class="chip" data-category="image">🎨 Image</button>
+      <button class="chip" data-category="text">✍️ Text</button>
+      <button class="chip" data-category="youtube">🎬 YouTube</button>
+      <button class="chip" data-category="coding">💻 Coding</button>
+    </div>
+    <div class="grid" id="promptGrid"></div>
+    <div class="empty" id="empty">দুঃখিত, এই নামে কোনো প্রম্পট পাওয়া যায়নি।</div>
+  </section>
+
+  <section class="generator" id="generator">
+    <div class="section-head">
+      <h2>🤖 Prompt Generator</h2>
+      <span class="pill">Free Template Tool</span>
+    </div>
+    <p class="muted">
+      আপনার কাজের ধরন ও বিস্তারিত লিখুন। টুলটি সেই তথ্য দিয়ে একটি
+      ব্যবহারযোগ্য প্রম্পট তৈরি করবে।
+    </p>
+
+    <form id="generatorForm">
+      <div class="form-grid">
+        <div class="field">
+          <label for="task">আপনি কী করতে চান?</label>
+          <select id="task" required>
+            <option value="ছবি তৈরি">AI দিয়ে ছবি তৈরি</option>
+            <option value="লেখালেখি">লেখালেখি বা আর্টিকেল</option>
+            <option value="YouTube ভিডিও">YouTube ভিডিও তৈরি</option>
+            <option value="ওয়েবসাইট বা অ্যাপ">ওয়েবসাইট বা অ্যাপ তৈরি</option>
+            <option value="শিক্ষা">কোনো বিষয় শেখা</option>
+            <option value="বিজনেস">ব্যবসার পরিকল্পনা</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="language">প্রম্পটের ভাষা</label>
+          <select id="language">
+            <option value="বাংলা">বাংলা</option>
+            <option value="English">English</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="idea">আপনার আইডিয়া বা কাজের বিবরণ</label>
+          <textarea id="idea" required
+            placeholder="উদাহরণ: আমার অনলাইন দোকানের জন্য একটি আধুনিক ওয়েবসাইট বানাতে চাই..."></textarea>
+        </div>
+        <div class="field">
+          <label for="style">স্টাইল বা ধরন</label>
+          <input id="style" placeholder="যেমন: Modern, Professional">
+        </div>
+        <div class="field">
+          <label for="detail">বিস্তারিত</label>
+          <select id="detail">
+            <option value="সংক্ষিপ্ত ও সহজ">সংক্ষিপ্ত</option>
+            <option value="বিস্তারিত ও ধাপে ধাপে">বিস্তারিত</option>
+            <option value="পেশাদার ও পূর্ণাঙ্গ">পেশাদার</option>
+          </select>
+        </div>
+        <div class="full">
+          <button class="btn" type="submit">✨ প্রম্পট তৈরি করুন</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="output" id="output">
+      <h3>আপনার তৈরি প্রম্পট</h3>
+      <pre id="generatedText"></pre>
+      <button class="btn" id="copyGenerated" type="button">📋 প্রম্পট কপি করুন</button>
+    </div>
+    <div class="note">
+      ℹ️ এই প্রাথমিক ভার্সনের Generator আপনার তথ্য থেকে একটি Prompt Template
+      তৈরি করে। এটি নিজে ChatGPT বা অন্য AI-তে সংযুক্ত নয়। সত্যিকারের AI
+      দিয়ে নতুন প্রম্পট তৈরি করতে পরে নিরাপদ API সংযোগ যোগ করতে হবে।
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="logo">✨ Prompt<span>Hub</span> AI</div>
+  <p>আপনার AI কাজের সহায়ক Prompt Library.</p>
+  <p>Made with ❤️ for AI creators</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const prompts = [
+  {
+    id:1, category:"image", icon:"🎨", title:"Professional Portrait",
+    description:"পেশাদার পোর্ট্রেট ছবি তৈরি",
+    prompt:"Create a photorealistic professional portrait of [SUBJECT]. Use natural studio lighting, realistic skin texture, sharp focus, balanced composition, elegant background, high detail and professional photography. Preserve the subject's real identity if a reference photo is provided."
+  },
+  {
+    id:2, category:"image", icon:"🖼️", title:"YouTube Thumbnail",
+    description:"আকর্ষণীয় ভিডিও থাম্বনেইল",
+    prompt:"Design an eye-catching YouTube thumbnail about [TOPIC]. Use strong visual contrast, expressive composition, cinematic lighting, a clear focal subject and space for a short readable title. Make it professional, engaging and suitable for a 16:9 thumbnail."
+  },
+  {
+    id:3, category:"image", icon:"🏷️", title:"Modern Logo Design",
+    description:"আধুনিক ব্র্যান্ড লোগো",
+    prompt:"Create a clean, memorable and professional logo for [BRAND NAME], a [BUSINESS TYPE] brand. Use a distinctive visual concept, balanced typography, simple shapes and a cohesive color palette. Make it recognizable at small sizes and suitable for digital and print use."
+  },
+  {
+    id:4, category:"text", icon:"✍️", title:"Article Writer",
+    description:"মানসম্মত আর্টিকেল লেখা",
+    prompt:"Act as an experienced content writer. Write a helpful, original and well-structured article about [TOPIC] for [TARGET AUDIENCE]. Start with an engaging introduction, use clear headings, practical examples and a useful conclusion. Avoid unsupported claims and unnecessary repetition."
+  },
+  {
+    id:5, category:"text", icon:"🌐", title:"English Translator",
+    description:"বাংলা থেকে ইংরেজি অনুবাদ",
+    prompt:"Translate the following text from Bengali to natural, grammatically correct English. Preserve the original meaning and tone. Use simple, everyday language unless a formal style is requested. Explain any important ambiguity briefly. Text: [PASTE YOUR TEXT HERE]"
+  },
+  {
+    id:6, category:"text", icon:"💡", title:"Creative Ideas",
+    description:"নতুন নতুন আইডিয়া বের করা",
+    prompt:"Act as a creative brainstorming partner. Generate 10 practical and original ideas about [TOPIC] for [TARGET AUDIENCE]. For each idea, explain its main benefit, difficulty level and one actionable first step. Avoid repeating the same concept."
+  },
+  {
+    id:7, category:"youtube", icon:"🎬", title:"Video Script Writer",
+    description:"YouTube ভিডিওর স্ক্রিপ্ট",
+    prompt:"Act as a YouTube scriptwriter. Create a complete [DURATION]-minute video script about [TOPIC] for [AUDIENCE]. Include a strong opening hook, a logical scene-by-scene structure, narration, suggested visuals, smooth transitions and a clear ending. Do not invent facts or quotations."
+  },
+  {
+    id:8, category:"youtube", icon:"🔎", title:"SEO Video Title",
+    description:"ভিডিওর টাইটেল ও বর্ণনা",
+    prompt:"Help optimize a YouTube video about [TOPIC]. Suggest 10 accurate, engaging titles, a useful video description, relevant search keywords and a few appropriate hashtags. Keep everything relevant to the actual video and avoid misleading clickbait."
+  },
+  {
+    id:9, category:"youtube", icon:"📱", title:"Short Video Ideas",
+    description:"Shorts ও Reels কনটেন্ট",
+    prompt:"Generate 5 short-form video concepts about [TOPIC]. For each, provide a hook for the first 3 seconds, a concise narration, suggested shots, on-screen text and a closing call to action. Keep each concept suitable for a vertical 9:16 video."
+  },
+  {
+    id:10, category:"coding", icon:"💻", title:"Website Builder",
+    description:"ওয়েবসাইট তৈরির নির্দেশনা",
+    prompt:"Act as a senior web developer and patient teacher. Help me build a responsive website for [PURPOSE]. My skill level is [BEGINNER/INTERMEDIATE]. Explain the required files, provide complete working code, make the design mobile-friendly, include basic accessibility and security practices, and explain how to test and deploy it."
+  },
+  {
+    id:11, category:"coding", icon:"📱", title:"Android App Planner",
+    description:"Android অ্যাপ তৈরির পরিকল্পনা",
+    prompt:"Act as an Android development mentor. Help me plan an Android app for [PURPOSE]. Explain suitable technologies, project structure, key screens, data storage, permissions, testing and APK building. Give beginner-friendly steps and complete code for each file when requested. Explain any paid service requirements."
+  },
+  {
+    id:12, category:"coding", icon:"🐛", title:"Code Debugger",
+    description:"কোডের ভুল খুঁজে বের করা",
+    prompt:"Act as an experienced software debugging assistant. Review the code and error message I provide. Identify the likely cause, explain it in beginner-friendly language, and show the corrected code. Preserve existing functionality and mention any assumptions. Code: [PASTE CODE] Error: [PASTE ERROR]"
+  }
+];
+
+let activeCategory = "all";
+const grid = document.getElementById("promptGrid");
+const searchInput = document.getElementById("search");
+const empty = document.getElementById("empty");
+const toast = document.getElementById("toast");
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;",
+    '"':"&quot;", "'":"&#39;"
+  })[char]);
+}
+
+function renderPrompts() {
+  const query = searchInput.value.trim().toLowerCase();
+
+  const filtered = prompts.filter(item => {
+    const matchesCategory =
+      activeCategory === "all" || item.category === activeCategory;
+    const searchable =
+      (item.title + " " + item.description + " " + item.prompt).toLowerCase();
+    return matchesCategory && searchable.includes(query);
+  });
+
+  grid.innerHTML = filtered.map(item => `
+    <article class="card">
+      <div class="card-top">
+        <span class="emoji">${item.icon}</span>
+        <span class="pill">${escapeHTML(item.category)}</span>
+      </div>
+      <h3>${escapeHTML(item.title)}</h3>
+      <div class="muted">${escapeHTML(item.description)}</div>
+      <div class="prompt">${escapeHTML(item.prompt)}</div>
+      <div class="card-actions">
+        <button class="btn" data-copy="${item.id}" type="button">📋 Copy</button>
+        <button class="btn secondary" data-use="${item.id}" type="button">✏️ ব্যবহার</button>
+      </div>
+    </article>
+  `).join("");
+
+  empty.style.display = filtered.length ? "none" : "block";
+  document.getElementById("totalCount").textContent = prompts.length;
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.style.display = "block";
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => {
+    toast.style.display = "none";
+  }, 2200);
+}
+
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+      const success = document.execCommand("copy");
+      area.remove();
+      if (!success) throw new Error("Copy failed");
+    }
+    showToast("✅ প্রম্পট কপি হয়েছে!");
+  } catch (error) {
+    showToast("কপি হচ্ছে না। প্রম্পটটি সিলেক্ট করে কপি করুন।");
+  }
+}
+
+document.getElementById("categories").addEventListener("click", event => {
+  const button = event.target.closest("[data-category]");
+  if (!button) return;
+
+  activeCategory = button.dataset.category;
+  document.querySelectorAll(".chip").forEach(chip => {
+    chip.classList.toggle("active", chip === button);
+  });
+  renderPrompts();
+});
+
+searchInput.addEventListener("input", renderPrompts);
+document.getElementById("searchBtn").addEventListener("click", renderPrompts);
+
+grid.addEventListener("click", event => {
+  const copyButton = event.target.closest("[data-copy]");
+  const useButton = event.target.closest("[data-use]");
+
+  if (copyButton) {
+    const item = prompts.find(p => p.id === Number(copyButton.dataset.copy));
+    if (item) copyText(item.prompt);
+  }
+
+  if (useButton) {
+    const item = prompts.find(p => p.id === Number(useButton.dataset.use));
+    if (!item) return;
+    document.getElementById("idea").value = item.prompt;
+    document.getElementById("generator").scrollIntoView({behavior:"smooth"});
+    showToast("প্রম্পটটি Generator-এ নেওয়া হয়েছে");
+  }
+});
+
+document.getElementById("generatorForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const task = document.getElementById("task").value;
+  const language = document.getElementById("language").value;
+  const idea = document.getElementById("idea").value.trim();
+  const style = document.getElementById("style").value.trim() || "পরিষ্কার ও মানসম্মত";
+  const detail = document.getElementById("detail").value;
+
+  if (!idea) {
+    showToast("আপনার কাজের বিবরণ লিখুন।");
+    return;
+  }
+
+  let result;
+
+  if (language === "English") {
+    result =
+`Act as an expert in ${task}.
+
+My goal:
+${idea}
+
+Preferred style: ${style}
+Level of detail: ${detail}
+
+Please provide a useful, well-organized result tailored to my goal. Use clear language, practical steps and relevant examples. State any important assumptions and do not invent facts.`;
+  } else {
+    result =
+`তুমি ${task} বিষয়ে একজন দক্ষ বিশেষজ্ঞ হিসেবে কাজ করো।
+
+আমার কাজের বিবরণ:
+${idea}
+
+পছন্দের স্টাইল: ${style}
+বিস্তারিতের ধরন: ${detail}
+
+আমার চাহিদা অনুযায়ী উপযোগী, সুসংগঠিত ও সহজে বোঝা যায় এমন উত্তর দাও। প্রয়োজন হলে ধাপে ধাপে নির্দেশনা ও বাস্তব উদাহরণ দাও। গুরুত্বপূর্ণ অনুমান স্পষ্ট করো এবং ভুল তথ্য তৈরি করো না।`;
+  }
+
+  document.getElementById("generatedText").textContent = result;
+  document.getElementById("output").style.display = "block";
+  document.getElementById("output").scrollIntoView({behavior:"smooth",block:"nearest"});
+});
+
+document.getElementById("copyGenerated").addEventListener("click", () => {
+  copyText(document.getElementById("generatedText").textContent);
+});
+
+renderPrompts();
+</script>
+</body>
+</html>
